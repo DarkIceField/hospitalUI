@@ -1,0 +1,151 @@
+<template>
+	<view class="subnvue-container">
+		<view class="editor-box">
+			<textarea class="inputer" v-if="fileType!='电子处方'"v-model="content":placeholder="placeholder" adjust-position="false"></textarea>
+		</view>
+		<view class="btn-container">
+			<button class="save-btn"  @click="save">
+				<text class="save-txt">保存</text>
+			</button>
+		</view>
+	</view>
+</template>
+
+<script>
+	import serverURL from '@/json.js'
+	export default {
+		data() {
+			return {
+				fileType: '',
+				patientId: '',
+				placeholder: '开始输入...',
+				content: ''
+			}
+		},
+		onLoad() {
+			uni.$on('popup-init', (data) => {
+				this.fileType = data.type;
+				this.patientId = data.patientId;
+			})
+		},
+		onUnload() {
+			uni.$off('popup-init')
+		},
+		computed:{
+		},
+		methods:{
+			save(){
+				let today=new Date();
+				let dateString=today.toLocaleDateString();
+				console.log(this.fileType);
+				uni.$emit('add', {
+					type: this.fileType,
+					date: '2021/1/14',
+					content: this.content
+				});
+				uni.getCurrentSubNVue().hide('auto')
+				// if(this.fileType=='电子诊断书'){
+				// 	console.log(this.fileType);
+				// 	uni.request({
+				// 		url: serverURL+ '/doctor/setDiagnosis',
+				// 		method:'GET',
+				// 		data:{
+				// 			patientId: this.patientId,
+				// 			date: dateString,
+				// 			conditionReport: this.content
+				// 		},
+				// 		success: (res)=>{
+				// 			console.log(res);
+				// 			if(res.data)
+				// 				uni.showToast({
+				// 					title: '添加成功！',
+				// 					duration: 2000,
+				// 					complete: function(){
+				// 						this.hide();
+				// 						}
+				// 				})
+				// 		},
+				// 		fail: () => {
+				// 			console.log('添加失败');
+				// 		}
+				// 	})
+				// }
+				// else if(this.fileType=='病情报告'){
+				// 	uni.request({
+				// 		url: serverURL+ '/doctor/setConditionReport'
+				// 		method:'GET',
+				// 		data:{
+				// 			patientId:,
+				// 			date:,
+				// 			conditionReport:
+				// 			this.toEnglish.content: 
+				// 		}
+				// 	})
+				// }
+				// else if(this.fileType=='查房记录'){
+				// 	uni.request({
+				// 		url: serverURL+ '/doctor/setWardRoundRecord'
+				// 		method:'GET',
+				// 		data:{
+				// 			patientId:,
+				// 			date:,
+				// 			conditionReport:
+				// 			this.toEnglish.content: 
+				// 		}
+				// 	})
+				// }
+				// else if(this.fileType=='电子处方'){
+				// 	uni.request({
+				// 		url: serverURL+ '/doctor/setPrescription'
+				// 		method:'GET',
+				// 		data:{
+				// 			patientId:,
+				// 			date:,
+				// 			conditionReport:
+				// 			this.toEnglish.content: 
+				// 		}
+				// 	})
+				// }
+			}
+		}
+	}
+</script>
+
+<style >
+	.subnvue-container{
+		flex-direction: row;
+	}
+	.editor-box{
+		height: 428upx;
+		width: 392upx;
+		/* background-color: #007AFF; */
+		padding: 20upx;
+	}
+	.inputer{
+		/* background-color: #2C405A; */
+		height: 388upx;
+		width: 352upx;
+		border-color: black;
+		border-style: solid;
+		border-width: 5upx;
+	}
+	.btn-container{
+		flex: 1;
+		flex-direction: row;
+		height: 428upx;
+		justify-content: center;
+		align-items: center;
+	}
+	.save-btn{
+		/* margin-left:auto; */
+		border-color: #00BFFF;
+		border-style: solid;
+		border-radius: 14upx;
+		width: 150upx;
+		height: 80upx;
+	}
+	.save-txt{
+		font-size: 48upx;
+		color: #00BFFF;
+	}
+</style>

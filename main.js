@@ -1,5 +1,12 @@
 import Vue from 'vue'
 import App from './App'
+import hxNavbar from "./components/hx-navbar/hx-navbar"
+import store from './store' 
+ 
+Vue.prototype.$store = store
+
+
+Vue.component('hx-navbar',hxNavbar)
 
 Vue.config.productionTip = false
 
