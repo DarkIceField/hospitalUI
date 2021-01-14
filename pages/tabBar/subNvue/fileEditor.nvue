@@ -16,6 +16,7 @@
 	export default {
 		data() {
 			return {
+				way: '',
 				fileType: '',
 				patientId: '',
 				placeholder: '开始输入...',
@@ -24,6 +25,7 @@
 		},
 		onLoad() {
 			uni.$on('popup-init', (data) => {
+				this.way=data.way;
 				this.fileType = data.type;
 				this.patientId = data.patientId;
 			})
@@ -38,7 +40,8 @@
 				let today=new Date();
 				let dateString=today.toLocaleDateString();
 				console.log(this.fileType);
-				uni.$emit('add', {
+				uni.$emit('add-or-modify', {
+					way: this.way,
 					type: this.fileType,
 					date: '2021/1/14',
 					content: this.content

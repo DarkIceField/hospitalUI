@@ -97,6 +97,20 @@ const store = new Vuex.Store({
 			state.files[data.type].push(file);
 			console.log(file);
 		},
+		modifyFile(state,data){
+			// let file={
+			// 	date:data.date,
+			// 	content:data.content,
+			// }
+			// console.log(data);
+			// console.log(state.files[data.type]);
+			for(let i=0;i<state.files[data.type].length;i++)
+				if(state.files[data.type][i].date==data.date)
+				{
+					state.files[data.type][i].content=data.content;
+					console.log(state.files[data.type][i]);
+				}
+		},
 		pay(state,index){
 			state.files['费用'][index].condition=true;
 		}

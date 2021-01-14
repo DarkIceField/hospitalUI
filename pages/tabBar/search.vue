@@ -42,13 +42,13 @@
 				<view class="btn-line">
 					<multiSelect class="select-box" :list="selectList" :clearable='false' :initValue="'电子诊断书'" @change="change"></multiSelect>
 					<button class="file-btn" @click="seeFile">查看</button>
-					<button v-if="enableAdd" class="file-btn" @click="showSubnvue">添加</button>
+					<button v-if="enableAdd" class="file-btn" @click="showSubnvue('add')">添加</button>
 				</view>
 				<view class="scroller-line">
 					<scroll-view class="scroller" scroll-y="true">
 						<view class="title-line" >
 							<text class="title">序号</text>
-							<text class="title">日期</text>
+							<text class="title" v-if="selectedValue!='患者日志'">日期</text>
 						</view>
 						<view class="div"></view>
 						<view class="file-line" v-for="(file,index) in fileShow">
@@ -65,9 +65,9 @@
 				</view>
 			</view>
 			<view class="file-detailbox">
-				<textarea class="detail-view"v-model="contentShow" disabled="true"></textarea>
+				<textarea class="detail-view" v-model="contentShow" ></textarea>
 				<view class="btn-container">
-					<button class="modify-btn" v-if="enableAdd" @click="showSubnvue">修改</button>
+					<button class="modify-btn" v-if="enableAdd" @click="showSubnvue('modify')">修改</button>
 				</view>
 			</view>
 		</view>
@@ -113,9 +113,12 @@
 					this.cardNum=data.msg;
 					this.startSearch()
 				})
-				uni.$on('add',(data) =>{
-					console.log(data);
-					this.addFile(data);
+				uni.$on('add-or-modify',(data) =>{
+					console.log(data.way);
+					if(data.way=='add')
+						this.addFile(data);
+					else if(data.way=='modify')
+						this.modifyFile(data);
 				})
 			})
 		},
@@ -131,12 +134,13 @@
 			}
 		},
 		methods:{
-			...mapMutations(['addFile']),
+			...mapMutations(['addFile','modifyFile']),
 			change({newVal,oldVal,index,orignItem}) {
 				this.selectedValue = newVal;
 			},
-			showSubnvue(){
+			showSubnvue(way){
 				uni.$emit('popup-init', {
+					way: way,
 					type: this.selectedValue,
 					patientId: this.cardNum
 				});
@@ -226,26 +230,28 @@
 					// 		console.log('/doctor/getPrescription失败');
 					// 	}
 					// })
-				// else if(this.selectedValue=='患者日志')
-					// uni.request({
-					// 	url: serverURL+'/bed//getHistory',
-					// 	method: 'GET',
-					// 	data: {
-					// 		patientId: this.cardNum
-					// 	},
-					// 	success: (res) => {
-					// 		// this.patient.cardNo=res.data.patientId;
-					// 		// this.patient.name=res.data.patientName;
-					// 		// this.patient.age=res.data.patientAge;
-					// 		// this.patient.sex=res.data.patientSex;
-					// 		// this.patient.address=res.data.patientA
-					// 		// this.patient.address=res.data.patientAddress;
-					// 		// this.patient.contact=res.data.patientContact
-					// 	},
-					// 	fail: () => {
-					// 		console.log('/doctor/getPatientMessage失败');
-					// 	}
-					// })
+				else if(this.selectedValue=='患者日志')
+					uni.request({
+						url: serverURL+'/bed/getHistory',
+						method: 'GET',
+						data: {
+							patientId: this.cardNum
+						},
+						success: (res) => {
+							// console.log(res.data);
+							this.fileShow=res.data;
+							// this.patient.cardNo=res.data.patientId;
+							// this.patient.name=res.data.patientName;
+							// this.patient.age=res.data.patientAge;
+							// this.patient.sex=res.data.patientSex;
+							// this.patient.address=res.data.patientA
+							// this.patient.address=res.data.patientAddress;
+							// this.patient.contact=res.data.patientContact
+						},
+						fail: () => {
+							console.log('/doctor/getPatientMessage失败');
+						}
+					})
 				else if(this.selectedValue=='查房记录')this.fileShow=this.files['查房记录'];
 				// 	uni.request({
 				// 		url: serverURL+'/doctor//getWardRoundRecord',
@@ -269,11 +275,21 @@
 				
 			},
 			showFile(){
-				console.log(this.fileShow[this.detailIndex].content);
-				this.contentShow=this.fileShow[this.detailIndex].content;
+				if(this.selectedValue=="患者日志"){
+					// console.log(this.fileShow[this.detailIndex]);
+					this.contentShow=this.showString(this.fileShow[this.detailIndex]);//JSON.stringify(this.fileShow[this.detailIndex]);
+					// this.contentShow='111';
+					// console.log(this.contentShow);
+				}
+				else this.contentShow=this.fileShow[this.detailIndex].content;
 			},
 			chosen(index){
 				this.detailIndex=index;
+			},
+			showString(obj){
+				JSON.stringify(obj);
+				return '心跳：'+obj.heartbeat+'\n体温：'+obj.temperature+'\n收缩压：'+obj.systolicPressure+'\n舒张压：'+obj.diastolicPressure
+				+'\n血氧含量：'+obj.bloodOxygenContent
 			}
 		}
 	}

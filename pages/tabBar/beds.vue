@@ -48,7 +48,7 @@
 			</view>
 			<view class="btn-container">
 				<button class="btn" @click="showDetail">详细信息</button>
-				<button class="btn" v-if="isDoc" @click="showSubnvue">查房</button>
+				<button class="btn" v-if="isDoc" @click="showSubnvue()">查房</button>
 				<button class="btn" v-if="false">给药计划</button>
 			</view>
 		</view>
@@ -174,6 +174,7 @@
 		methods:{
 			showSubnvue(){
 				uni.$emit('popup-init', {
+					way: 'add',
 					type: '查房记录',
 					patientId: this.cardNum
 				});

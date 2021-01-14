@@ -91,7 +91,60 @@
 				"animationType": "slide-in-rightslide-in-right"
 			}
 		}
-	}],
+	}   
+        ,{
+            "path" : "pages/file/introduce",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-rightslide-in-right"
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/file/code",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-rightslide-in-right"
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/file/tips",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-rightslide-in-right"
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/file/schedule",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-rightslide-in-right"
+				}
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
